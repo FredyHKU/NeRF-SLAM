@@ -48,17 +48,17 @@ class iSAM2(Solver):
         isam_params.setFactorization("CHOLESKY") # QR or Cholesky
 
         # Linearization parameters
-        isam_params.enableRelinearization = True
-        isam_params.enablePartialRelinearizationCheck = False
+        isam_params.setEnableRelinearization(True)
+        isam_params.setEnablePartialRelinearizationCheck(False)
         isam_params.setRelinearizeThreshold(0.1) # TODO
-        isam_params.relinearizeSkip = 10
+        isam_params.setRelinearizeSkip(10)
 
         # Memory efficiency, but slower
-        isam_params.findUnusedFactorSlots = True
+        # isam_params.findUnusedFactorSlots = True # cannot set in python wrapper
 
         # Debugging parameters, disable for speed
-        isam_params.evaluateNonlinearError = True
-        isam_params.enableDetailedResults = True
+        # isam_params.evaluateNonlinearError = True
+        # isam_params.enableDetailedResults = True
 
         #isam_params.print()
 

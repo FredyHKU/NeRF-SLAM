@@ -1154,10 +1154,13 @@ class RaftVisualFrontend(VisualFrontend):
                 self.world_T_body[kf_idx] = gtsam_pose_to_torch(poses.atPose3(key),
                                                                 device=self.device, dtype=torch.float)
             
+            # Extract deltas for the pose keys
+            xi_delta_array = np.vstack([gtsam_delta.at(key) for key in pose_keys])
+
             # Update Cam to world Poses
             self.cam0_T_world[:] = (SE3(self.cam0_T_body[None]) * SE3(self.world_T_body).inv()).vec() # Refresh cam0_poses given retracted body_poses
             # Retract Depths
-            xi_delta = torch.as_tensor(gtsam_delta.vector(pose_keys), device=self.device, dtype=torch.float).view(-1, 6)
+            xi_delta = torch.as_tensor(xi_delta_array, device=self.device, dtype=torch.float).view(-1, 6)
             droid_backends.solve_depth(xi_delta, self.cam0_idepths, Q, E, w, ii, jj, kf0, kf1)
             self.cam0_idepths.clamp_(min=0.001)
 
